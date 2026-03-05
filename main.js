@@ -43,17 +43,34 @@
         });
     }
 
-    // Function to check if the page contains an "entries" button and close it
+    // Function to handle DO816 event pages - click button and wait for modal
     function checkAndCloseTab() {
         const entryButton = document.querySelector('a.ds-btn-win');
+
+        // If already entered, close tab
         if (entryButton?.textContent.includes('entries')) {
+            console.log('Already entered, closing tab');
             window.close();
+            return;
         }
-        entryButton.click();
+
+        // Click the button to open the modal
+        if (entryButton) {
+            console.log('Clicking entry button to open modal...');
+            entryButton.click();
+
+            // Wait for modal to appear, then autofill
+            setTimeout(() => {
+                console.log('Looking for form in modal...');
+                tryAutofill();
+            }, 1500);
+        }
     }
 
     // AUTOFILL FUNCTIONALITY FOR GIVEAWAY FORMS
     function tryAutofill() {
+        console.log('🔍 Searching for form fields...');
+
         // Find common form field patterns
         const firstNameField = document.querySelector(
             'input[name*="first" i], ' +
@@ -88,6 +105,15 @@
             'input[name*="mobile" i], ' +
             'input[placeholder*="phone" i]'
         );
+
+        // Check if we found any fields
+        const foundFields = [firstNameField, lastNameField, emailField, zipcodeField, phoneField].filter(f => f);
+        if (foundFields.length === 0) {
+            console.log('⚠️  No form fields found on this page');
+            return;
+        }
+
+        console.log(`Found ${foundFields.length} form field(s)`);
 
         // Fill in the fields with hardcoded values
         if (firstNameField && PERSONAL_INFO.firstName) {
@@ -196,6 +222,14 @@
             console.log('🎯 Found submit button, clicking...');
             submitButton.click();
             console.log('✅ Form submitted!');
+
+            // If on DO816 events page, close tab after submission
+            if (window.location.hostname === 'do816.com' && window.location.pathname.startsWith('/events')) {
+                console.log('Closing tab after submission...');
+                setTimeout(() => {
+                    window.close();
+                }, 2000);
+            }
         } else {
             console.log('⚠️  Could not find submit button');
             alert('Please click the submit button manually');
