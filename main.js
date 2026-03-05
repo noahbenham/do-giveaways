@@ -16,6 +16,18 @@
 (function() {
     'use strict';
 
+    // ========================================
+    // PERSONAL INFO - FILL IN YOUR DETAILS
+    // ========================================
+    const PERSONAL_INFO = {
+        firstName: '',
+        lastName: '',
+        email: '',
+        zipCode: '',
+        phone: ''
+    };
+    // ========================================
+
     const BASE_URL = 'https://do816.com';
 
     // Function to open links in background tabs
@@ -77,42 +89,47 @@
             'input[placeholder*="phone" i]'
         );
 
-        // Set autocomplete attributes to trigger Chrome autofill
-        if (firstNameField) {
-            console.log('✅ Found first name field');
-            firstNameField.setAttribute('autocomplete', 'given-name');
-            firstNameField.focus();
-            setTimeout(() => {
-                const clickEvent = new MouseEvent('mousedown', { bubbles: true });
-                firstNameField.dispatchEvent(clickEvent);
-            }, 100);
+        // Fill in the fields with hardcoded values
+        if (firstNameField && PERSONAL_INFO.firstName) {
+            console.log('✅ Filling first name field');
+            firstNameField.value = PERSONAL_INFO.firstName;
+            firstNameField.dispatchEvent(new Event('input', { bubbles: true }));
+            firstNameField.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
-        if (lastNameField) {
-            console.log('✅ Found last name field');
-            lastNameField.setAttribute('autocomplete', 'family-name');
+        if (lastNameField && PERSONAL_INFO.lastName) {
+            console.log('✅ Filling last name field');
+            lastNameField.value = PERSONAL_INFO.lastName;
+            lastNameField.dispatchEvent(new Event('input', { bubbles: true }));
+            lastNameField.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
-        if (emailField) {
-            console.log('✅ Found email field');
-            emailField.setAttribute('autocomplete', 'email');
+        if (emailField && PERSONAL_INFO.email) {
+            console.log('✅ Filling email field');
+            emailField.value = PERSONAL_INFO.email;
+            emailField.dispatchEvent(new Event('input', { bubbles: true }));
+            emailField.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
-        if (zipcodeField) {
-            console.log('✅ Found zipcode field');
-            zipcodeField.setAttribute('autocomplete', 'postal-code');
+        if (zipcodeField && PERSONAL_INFO.zipCode) {
+            console.log('✅ Filling zipcode field');
+            zipcodeField.value = PERSONAL_INFO.zipCode;
+            zipcodeField.dispatchEvent(new Event('input', { bubbles: true }));
+            zipcodeField.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
-        if (phoneField) {
-            console.log('✅ Found phone field');
-            phoneField.setAttribute('autocomplete', 'tel');
+        if (phoneField && PERSONAL_INFO.phone) {
+            console.log('✅ Filling phone field');
+            phoneField.value = PERSONAL_INFO.phone;
+            phoneField.dispatchEvent(new Event('input', { bubbles: true }));
+            phoneField.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
-        // Auto-submit after delay to let Chrome autofill populate
-        console.log('⏳ Waiting for autofill to populate, then auto-submitting...');
+        // Auto-submit after delay to ensure fields are populated
+        console.log('⏳ Waiting for fields to settle, then auto-submitting...');
         setTimeout(() => {
             autoSubmit();
-        }, 3000); // Wait 3 seconds for autofill to complete
+        }, 2000); // Wait 2 seconds then submit
 
         // Still add button as backup in case auto-submit fails
         addAutoSubmitButton();
